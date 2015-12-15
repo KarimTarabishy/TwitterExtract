@@ -1,7 +1,7 @@
 package gp.twitter.extract.util;
 
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
+import java.nio.charset.Charset;
 
 public class IOUtil {
 
@@ -13,5 +13,19 @@ public class IOUtil {
             yourFile.createNewFile();
         }
         return yourFile;
+    }
+
+    public static OutputStreamWriter getTweetsFileWrite(String file_name) throws IOException {
+        return new OutputStreamWriter(
+                new FileOutputStream(
+                        IOUtil.ensureFileExist(file_name)
+                ),  Charset.forName("UTF-8").newEncoder() );
+    }
+
+    public static InputStreamReader getTweetsFileReader(String file_name) throws IOException {
+        return new InputStreamReader(
+                new FileInputStream(
+                        IOUtil.ensureFileExist(file_name)
+                ),"UTF-8" );
     }
 }

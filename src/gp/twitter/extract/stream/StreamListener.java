@@ -19,7 +19,7 @@ public class StreamListener implements StatusListener {
 
     public StreamListener(TwitterStream twitterStream) throws IOException {
         this.twitterStream = twitterStream;
-        tweetsFileIO = new BufferedWriter(createTweetsFile());
+        tweetsFileIO = new BufferedWriter(IOUtil.getTweetsFileWrite(getCurrentTweetsFileName()));
     }
 
     /**
@@ -38,8 +38,14 @@ public class StreamListener implements StatusListener {
             e.printStackTrace();
         }
         counter++;
-        if(counter == maxTweetsCountPerFile )
+        if(counter == maxTweetsCountPerFile ) {
+            try {
+                tweetsFileIO.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
             twitterStream.shutdown();
+        }
     }
 
    
@@ -65,11 +71,10 @@ public class StreamListener implements StatusListener {
         ex.printStackTrace();
     }
 
-    private OutputStreamWriter createTweetsFile() throws IOException {
-        return new OutputStreamWriter(
-                new FileOutputStream(
-                        IOUtil.ensureFileExist(currentTweetsFile + Integer.toString(currentFileIndex) + ".txt")
-                ),  Charset.forName("UTF-8").newEncoder() );
+
+    private String getCurrentTweetsFileName()
+    {
+        return currentTweetsFile+Integer.toString(currentFileIndex) + ".txt";
     }
 
 
