@@ -1,6 +1,7 @@
 package gp.twitter.extract.features;
 
 
+import gp.twitter.extract.sequence.labeler.Sentence;
 import gp.twitter.extract.sequence.labeler.Tag;
 import gp.twitter.extract.util.SparseArray;
 
@@ -18,7 +19,7 @@ public  abstract class FeatureExtractor {
 		 
 	 }
 	 
-	public  abstract SparseArray getfeatures(Tag c_tag , Tag ptag , String []word, int position) ;
+	public  abstract SparseArray getfeatures(Tag c_tag , Tag ptag , Sentence sentence, int position) ;
 		
 	
 	public void setBeginId(int next_start_feature_id){
