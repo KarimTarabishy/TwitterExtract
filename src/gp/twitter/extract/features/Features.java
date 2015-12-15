@@ -1,5 +1,6 @@
 package gp.twitter.extract.features;
 
+import gp.twitter.extract.sequence.labeler.Sentence;
 import gp.twitter.extract.sequence.labeler.Tag;
 import gp.twitter.extract.util.SparseArray;
 
@@ -24,28 +25,28 @@ public class Features {
 	}
 	
 	
-	 public SparseArray getfeatures(Tag c_tag , Tag ptag , String [] word, int position){
+	 public SparseArray getfeatures(Tag c_tag , Tag ptag , Sentence sentence, int position){
 		 
 		SparseArray featureVector =getfeatures_dependent( c_tag ,
-				ptag , word, position);
+				ptag , sentence, position);
 		featureVector.concat(getfeatures_independent (c_tag ,
-				ptag , word, position));
+				ptag , sentence, position));
 		 return featureVector;
 	 }
 	 
 	 private SparseArray extract(ArrayList<FeatureExtractor> extractors, Tag c_tag , Tag ptag,
-								 String [] word, int position)
+			 Sentence sentence, int position)
 	 {
 		SparseArray featureVector = null;
 		for(int i=0;i<extractors.size();i++)
 		{
 			if(i == 0)
 			{
-				featureVector = extractors.get(i).getfeatures(c_tag, ptag, word, position);
+				featureVector = extractors.get(i).getfeatures(c_tag, ptag, sentence, position);
 			}
 			else
 			{
-				featureVector.concat(extractors.get(i).getfeatures(c_tag, ptag, word, position));
+				featureVector.concat(extractors.get(i).getfeatures(c_tag, ptag, sentence, position));
 			}
 		}
 			 
@@ -53,19 +54,19 @@ public class Features {
 	 }
 		
 	 
-	public SparseArray getfeatures_dependent(Tag c_tag ,Tag ptag ,String [] word, int position)
+	public SparseArray getfeatures_dependent(Tag c_tag ,Tag ptag ,Sentence sentence, int position)
 	{
 		return extract(current_tag_dependent_extractors, c_tag ,
-				ptag , word, position);
+				ptag , sentence, position);
 		 
 		 
 		 
 	 }
 	
-	public SparseArray getfeatures_independent(Tag c_tag ,Tag ptag ,String [] word, int position)
+	public SparseArray getfeatures_independent(Tag c_tag ,Tag ptag ,Sentence sentence, int position)
 	{
 		return extract(current_tag_independent_extractors, c_tag ,
-				ptag , word, position);
+				ptag , sentence, position);
 		 
 	 }
    		 
