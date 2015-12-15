@@ -1,6 +1,6 @@
 package gp.twitter.extract.sequence.labeler;
 
-import gp.twitter.extract.Features;
+import gp.twitter.extract.features.*;
 import gp.twitter.extract.util.SparseArray;
 
 
