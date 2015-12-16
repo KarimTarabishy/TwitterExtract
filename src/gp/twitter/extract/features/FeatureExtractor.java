@@ -1,8 +1,8 @@
 package gp.twitter.extract.features;
 
 
-import gp.twitter.extract.sequence.labeler.Sentence;
-import gp.twitter.extract.sequence.labeler.Tag;
+import gp.twitter.extract.labeler.sequence.Sentence;
+import gp.twitter.extract.labeler.tags.Tag;
 import gp.twitter.extract.util.SparseArray;
 
 public  abstract class FeatureExtractor {

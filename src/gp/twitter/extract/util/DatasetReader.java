@@ -9,7 +9,7 @@ public class DatasetReader {
 
     public DatasetReader(String fileName) throws IOException {
         fileName = fileName;
-        bufferedReader = new BufferedReader(IOUtil.getTweetsFileReader(fileName));
+        bufferedReader = new BufferedReader(IOUtil.getUTF8FileReader(fileName));
     }
 
     /**

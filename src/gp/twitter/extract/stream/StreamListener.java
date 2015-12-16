@@ -4,9 +4,8 @@ package gp.twitter.extract.stream;
 import gp.twitter.extract.util.IOUtil;
 import twitter4j.*;
 
-import java.io.*;
-import java.nio.charset.Charset;
-import java.util.Scanner;
+import java.io.BufferedWriter;
+import java.io.IOException;
 
 
 public class StreamListener implements StatusListener {
@@ -19,7 +18,7 @@ public class StreamListener implements StatusListener {
 
     public StreamListener(TwitterStream twitterStream) throws IOException {
         this.twitterStream = twitterStream;
-        tweetsFileIO = new BufferedWriter(IOUtil.getTweetsFileWrite(getCurrentTweetsFileName()));
+        tweetsFileIO = new BufferedWriter(IOUtil.getUTF8FileWriter(getCurrentTweetsFileName()));
     }
 
     /**

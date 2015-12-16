@@ -1,27 +1,20 @@
-package gp.twitter.extract.sequence.labeler;
+package gp.twitter.extract.labeler.sequence;
+
+import gp.twitter.extract.labeler.tags.Tag;
 
 import java.util.ArrayList;
-
-import javax.management.RuntimeErrorException;
-
-import gp.twitter.extract.util.SparseArray;
 
 public class Sentence {
 	private ArrayList <Observation> observations;
 	private boolean locked = false ;
-	
-	public Sentence() {
-		
-		
-		
-	}
-	public void addObseration(Observation observation){
+
+	public void addObservation(Observation observation){
 		if(locked==false)
 		{ 
 			observations.add(observation);
 		}
-		
-		else{
+		else
+		{
 			throw new RuntimeException("adding to locked sentences");
 		} 
 	}
@@ -30,18 +23,19 @@ public class Sentence {
 		locked=true;
 	}
 	
-	public Observation getObsernation(int index){
-		
+	public Observation getObservation(int index){
 		return observations.get(index);
 	}
 	
 	public int getSize(){
-		
 		return observations.size();
-		
-		
-		
-		
 	}
+
+    public Tag getObservationTag(int position)
+    {
+        return observations.get(position).getTag();
+    }
+
+
 
 }

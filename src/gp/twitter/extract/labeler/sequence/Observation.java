@@ -1,14 +1,15 @@
-package gp.twitter.extract.sequence.labeler;
+package gp.twitter.extract.labeler.sequence;
+
+import gp.twitter.extract.labeler.tags.Tag;
+import gp.twitter.extract.util.SparseArray;
 
 import java.util.ArrayList;
 
-import gp.twitter.extract.util.SparseArray;
-
 public class Observation {
-	 private String value;
-	 private Tag tag ;
-	 private SparseArray current_transition_feature ;
-	 private ArrayList<SparseArray> all_transition_feature   ;
+	private String value;
+	private Tag tag ;
+	private SparseArray current_transition_feature ;
+	private ArrayList<SparseArray> all_transition_feature   ;
 	public String getValue() {
 		return value;
 	}

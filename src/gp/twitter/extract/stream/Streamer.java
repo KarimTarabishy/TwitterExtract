@@ -1,6 +1,5 @@
 package gp.twitter.extract.stream;
 
-import twitter4j.FilterQuery;
 import twitter4j.TwitterStream;
 import twitter4j.TwitterStreamFactory;
 import twitter4j.auth.AccessToken;

@@ -1,20 +1,17 @@
 package gp.twitter.extract.preprocess;
 
 
-
-import java.util.regex.Pattern;
-
+import org.apache.commons.lang3.StringEscapeUtils;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintStream;
-import java.util.regex.*;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.ArrayList;
-
-import org.apache.commons.lang3.StringEscapeUtils;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Twokenize -- a tokenizer designed for Twitter text in English and some other European languages.

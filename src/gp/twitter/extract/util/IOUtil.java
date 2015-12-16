@@ -15,14 +15,14 @@ public class IOUtil {
         return yourFile;
     }
 
-    public static OutputStreamWriter getTweetsFileWrite(String file_name) throws IOException {
+    public static OutputStreamWriter getUTF8FileWriter(String file_name) throws IOException {
         return new OutputStreamWriter(
                 new FileOutputStream(
                         IOUtil.ensureFileExist(file_name)
                 ),  Charset.forName("UTF-8").newEncoder() );
     }
 
-    public static InputStreamReader getTweetsFileReader(String file_name) throws IOException {
+    public static InputStreamReader getUTF8FileReader(String file_name) throws IOException {
         return new InputStreamReader(
                 new FileInputStream(
                         IOUtil.ensureFileExist(file_name)
