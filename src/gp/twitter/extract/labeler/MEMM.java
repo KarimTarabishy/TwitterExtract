@@ -184,8 +184,10 @@ public class MEMM {
         return 0;
     }
 	 
-    public Sentence greedy_decode(Sentence sentence, double [] v)
+    public Sentence greedy_decode(Sentence sentence)
     {
+        if(feature_weights==null)
+            throw new RuntimeException("can't decode before training");
         // move over each word in tweet
         for(int i = 0; i < sentence.getSize(); i++)
         {
@@ -198,7 +200,7 @@ public class MEMM {
             //move over all tags
             for(int j = 1; j < all_possible_transition_features.size(); j++)
             {
-                double score = Math.exp(all_possible_transition_features.get(j).dotProduct(v));
+                double score = Math.exp(all_possible_transition_features.get(j).dotProduct(feature_weights));
                 if(score > max_transition_score)
                 {
                     max_transition_score = score;
