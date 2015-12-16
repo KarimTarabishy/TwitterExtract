@@ -27,6 +27,7 @@ public class Train {
         /*
             TODO: Add the optimization part
          */
+        model.finishTraining();
 	}
 
     /**

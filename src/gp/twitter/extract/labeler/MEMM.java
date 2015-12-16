@@ -5,7 +5,7 @@ import gp.twitter.extract.labeler.sequence.Observation;
 import gp.twitter.extract.labeler.sequence.Sentence;
 import gp.twitter.extract.labeler.tags.Tag;
 import gp.twitter.extract.labeler.tags.Tags;
-import gp.twitter.extract.util.SparseArray;
+import gp.twitter.extract.labeler.sparse.array.SparseArray;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -16,9 +16,10 @@ public class MEMM {
 	private double [] feature_weights;
 	private String model_data_file_name;
 	private Tags tags;
+    boolean training;
 	
 	/**
-	 * Construct a MEMM model from file, usually used when already trained memm model.
+	 * Construct a MEMM model from file,  used when already trained memm model.
 	 * @param model_data_file_name the file name containing the model data
      * @param tags Specific tags used
 	 */
@@ -26,15 +27,27 @@ public class MEMM {
 		this.model_data_file_name = model_data_file_name;
 		loadFromFile();
         this.tags = tags;
+        training =false;
 	}
 
+    public void finishTraining(){
+        if(training ==false)
+            throw new RuntimeException("Model already trained");
+        training =false;
+
+    }
+    public boolean isTraining(){
+        return training;
+    }
+
     /**
-     * Construct MEMM model. Usually used when training
+     * Construct MEMM model. Used when training
      * @param tags Specific tags used
      */
     public MEMM(Tags tags)
     {
         this.tags = tags;
+        training =true;
     }
 	
 	/**

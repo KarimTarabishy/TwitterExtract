@@ -1,7 +1,7 @@
 package gp.twitter.extract.labeler.sequence;
 
 import gp.twitter.extract.labeler.tags.Tag;
-import gp.twitter.extract.util.SparseArray;
+import gp.twitter.extract.labeler.sparse.array.SparseArray;
 
 import java.util.ArrayList;
 
