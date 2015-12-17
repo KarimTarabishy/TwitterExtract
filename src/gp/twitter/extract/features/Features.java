@@ -13,6 +13,9 @@ public class Features {
     private  ArrayList<FeatureExtractor> current_tag_dependent_extractors;
     private boolean training;
     private String featureFileName;
+
+
+
     public Features(String featureFileName){
 
         this.featureFileName=featureFileName;
@@ -27,7 +30,6 @@ public class Features {
 
 
     }
-
 
 	public void addExtractor(FeatureExtractor fe)
 	{
