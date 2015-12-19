@@ -16,4 +16,20 @@ public class Tag {
     {
         return symbol;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Tag tag = (Tag) o;
+
+        return id == tag.id;
+
+    }
+
+    @Override
+    public int hashCode() {
+        return id;
+    }
 }

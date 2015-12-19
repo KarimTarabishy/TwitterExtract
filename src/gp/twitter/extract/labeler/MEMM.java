@@ -23,12 +23,25 @@ public class MEMM {
 	 * @param model_data_file_name the file name containing the model data
      * @param tags Specific tags used
 	 */
-	public MEMM(String model_data_file_name, Tags tags) throws IOException {
+	public MEMM(String model_data_file_name, Tags tags, Features features) throws IOException {
 		this.model_data_file_name = model_data_file_name;
 		loadFromFile();
         this.tags = tags;
         training =false;
+        this.features = features;
 	}
+
+    /**
+     * Construct MEMM model. Used when training
+     * @param tags Specific tags used
+     */
+    public MEMM(Tags tags, Features features)
+    {
+        this.tags = tags;
+        training =true;
+        this.features = features;
+
+    }
 
     public void finishTraining(){
         if(training ==false)
@@ -40,15 +53,7 @@ public class MEMM {
         return training;
     }
 
-    /**
-     * Construct MEMM model. Used when training
-     * @param tags Specific tags used
-     */
-    public MEMM(Tags tags)
-    {
-        this.tags = tags;
-        training =true;
-    }
+
 	
 	/**
 	 * Loads the model parameters from file
