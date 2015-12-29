@@ -1,0 +1,9 @@
+wordForm    80%
++prefix     85%
++clusters   92.07%
++suffix     92.3%
++prev&next  92.63%
++positional 92.7%
++ortho      92.73%
++url        92.73% [disabled]
++prevnext   92.72%
