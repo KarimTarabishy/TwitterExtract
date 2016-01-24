@@ -2,6 +2,7 @@ package com.gp.extract.twitter.stream;
 
 
 import com.gp.extract.twitter.Main;
+import com.gp.extract.twitter.pipeline.Pipeline;
 import com.gp.extract.twitter.util.IOUtil;
 import twitter4j.*;
 
@@ -22,7 +23,7 @@ public class StreamListener implements StatusListener, IOUtil.Logger {
     public StreamListener(TwitterStream twitterStream, int limit) throws IOException {
         this.twitterStream = twitterStream;
         this.limit = limit;
-        //tweetsFileIO = new BufferedWriter(IOUtil.getUTF8FileWriter(getCurrentTweetsFileName(), true));
+
     }
 
     /**
@@ -42,22 +43,8 @@ public class StreamListener implements StatusListener, IOUtil.Logger {
             twitterStream.shutdown();
             return;
         }
-        Main.pipeline(text);
+        Pipeline.getPipeline().process(text);
 
-//        try {
-//            tweetsFileIO.write(text);
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//        counter++;
-//        if(counter == maxTweetsCountPerFile ) {
-//            try {
-//                tweetsFileIO.close();
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
-//            twitterStream.shutdown();
-//        }
     }
 
    

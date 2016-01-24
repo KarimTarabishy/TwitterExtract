@@ -1,31 +1,39 @@
 package com.gp.extract.twitter.labeler.sequence;
 
+import com.gp.extract.twitter.Configuration;
 import com.gp.extract.twitter.labeler.features.FeatureArray;
 
 import java.util.ArrayList;
+import java.util.EnumMap;
 
 public class Sentence {
     private ArrayList<String> words;
-    private ArrayList<Integer> tags;
+    private EnumMap<Configuration.Task, ArrayList<Integer>> tags;
     private ArrayList<FeatureArray> observationalFeatures;
 
-    public Sentence(ArrayList<String> words, ArrayList<String> tagSymbols, Tags tagsSet)
+    public Sentence(Configuration.Task task, ArrayList<String> words, ArrayList<String> tagSymbols, Tags tagsSet)
     {
-        this.words= words;
-        tags = new ArrayList<>(words.size());
+        tags = new EnumMap<Configuration.Task, ArrayList<Integer>>(Configuration.Task.class);
+        this.words = words;
 
+        for(Configuration.Task t : Configuration.Task.values())
+        {
+            tags.put(t,new ArrayList<>(words.size()));
+        }
+
+        ArrayList<Integer> _tags = tags.get(task);
         if(tagSymbols!= null)
         {
             for(String tagSymbol : tagSymbols)
             {
-                tags.add(tagsSet.getTagIDBySymbol(tagSymbol));
+               _tags.add(tagsSet.getTagIDBySymbol(tagSymbol));
             }
         }
         else
         {
             for(int i = 0; i < words.size(); i++)
             {
-                tags.add(i, -1);
+                _tags.add(i, -1);
             }
         }
 
@@ -54,13 +62,13 @@ public class Sentence {
         }
     }
 
-    public int getTag(int position, Tags tagSet)
+    public int getTag(Configuration.Task task, int position, Tags tagSet)
     {
         if(position == -1)
         {
             return tagSet.getStartTagId();
         }
-        return tags.get(position);
+        return tags.get(task).get(position);
     }
 
     public FeatureArray getObservationalFeatureArray(int position)
@@ -76,14 +84,14 @@ public class Sentence {
         return words.get(position);
     }
 
-    public ArrayList<Integer> getTags()
+    public ArrayList<Integer> getTags(Configuration.Task task)
     {
-        return tags;
+        return tags.get(task);
     }
 
-    public void setTag(int position, int tag_index)
+    public void setTag(Configuration.Task task,int position, int tag_index)
     {
-        tags.set(position, tag_index);
+        tags.get(task).set(position, tag_index);
     }
 
 }

@@ -11,16 +11,20 @@ import java.util.*;
 public class Tags implements IOUtil.Logger, IOUtil.Loadable{
     private Map<String,Integer> symbolToTag = new HashMap<>() ;
     private ArrayList<String> idToTag = new ArrayList<>();
-    private static final String startTagSymbol = "POS_START_TAG";
+
+    private String startTagSymbol, endTagSymbol;
+    private int startTagIndex, endTagIndex;
     private static final String DATA_FILE = "tags.txt";
     private boolean isInitialized = false;
     private static final String LOGGER_ID = Tags.class.getName();
     private String saveDirectory;
 
 
-    public Tags(String saveDirectory)
+    public Tags(String saveDirectory, String startTagSymbol, String endTagSymbol)
     {
         this.saveDirectory = saveDirectory;
+        this.startTagSymbol = startTagSymbol;
+        this.endTagSymbol = endTagSymbol;
     }
 
     public void addTags(HashSet<String> tagSet)
@@ -42,9 +46,36 @@ public class Tags implements IOUtil.Logger, IOUtil.Loadable{
             symbolToTag.put(tag, index++);
         }
 
-        //add the start tag
-        idToTag.add(index, startTagSymbol);
-        symbolToTag.put(startTagSymbol, index++);
+        //check if the start tag symbol exists in the tag set
+        //if so then adjust its index, otherwise add it and adjust its index
+        Integer start_index = symbolToTag.get(startTagSymbol);
+        if(start_index != null)
+        {
+            startTagIndex = start_index;
+        }
+        else
+        {
+            startTagIndex = index;
+            //add the start tag
+            idToTag.add(index, startTagSymbol);
+            symbolToTag.put(startTagSymbol, index++);
+        }
+
+        //check if the end tag symbol exists in the tag set
+        //if so then adjust its index, otherwise add it and adjust its index
+        Integer endIndex = symbolToTag.get(endTagSymbol);
+        if(endIndex != null)
+        {
+            endTagIndex = endIndex;
+        }
+        else
+        {
+            endTagIndex = index;
+            //add the start tag
+            idToTag.add(index, endTagSymbol);
+            symbolToTag.put(endTagSymbol, index++);
+        }
+
 
         isInitialized = true;
     }
@@ -58,8 +89,26 @@ public class Tags implements IOUtil.Logger, IOUtil.Loadable{
     }
 
     public int getStartTagId() {
-        return idToTag.size()-1;
+        return startTagIndex;
     }
+
+
+    public String getStartTagSymbol() {
+        return startTagSymbol;
+    }
+
+    public String getEndTagSymbol() {
+        return endTagSymbol;
+    }
+
+    public int getStartTagIndex() {
+        return startTagIndex;
+    }
+
+    public int getEndTagIndex() {
+        return endTagIndex;
+    }
+
 
     /**
      * Get tags size.

@@ -6,7 +6,6 @@ import com.gp.extract.twitter.util.IOUtil;
 
 import java.io.*;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
 
@@ -115,8 +114,6 @@ public class Features implements IOUtil.Logger, IOUtil.Loadable{
 
             }
         }
-
-
 
         //now its time to sequentially update the offset of each feature extractor
         for(int extractor_index = 0; extractor_index < extractors.size(); extractor_index++)

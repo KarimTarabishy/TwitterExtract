@@ -3,7 +3,10 @@ package com.gp.extract.twitter.labeler.features;
 import com.gp.extract.twitter.labeler.sequence.Sentence;
 import com.gp.extract.twitter.util.IOUtil;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;

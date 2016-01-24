@@ -1,10 +1,10 @@
 package com.gp.extract.twitter.labeler;
 
-import com.gp.extract.twitter.labeler.features.Features;
+import com.gp.extract.twitter.Configuration;
+import com.gp.extract.twitter.labeler.models.SequenceModel;
 import com.gp.extract.twitter.labeler.sequence.Sentence;
 import com.gp.extract.twitter.labeler.sequence.Tags;
 import com.gp.extract.twitter.util.IOUtil;
-import com.sun.org.apache.bcel.internal.generic.IUSHR;
 import edu.stanford.nlp.math.ArrayMath;
 import edu.stanford.nlp.optimization.DiffFunction;
 
@@ -17,12 +17,16 @@ public class Trainer implements IOUtil.Logger {
 
     private static final String LOGGER_ID = Trainer.class.getName();
     private ArrayList<Sentence> trainingSentences;
-    private MaximumEntropyMarkovModel model;
-    private static final double l1 = 0.25, l2 = 2, tol = 1e-7;
-    private static final int maxIter = 500;
+    private SequenceModel model;
 
-    public Trainer(MaximumEntropyMarkovModel model) {
+    private double l1, l2;
+    private static final int maxIter = 500;
+    private static double tol = 1e-7;
+
+    public Trainer(SequenceModel model) {
         this.model = model;
+        l1 = Configuration.getL1(model.getTask());
+        l2 = Configuration.getL2(model.getTask());;
     }
 
     public void trainModel(ArrayList<Sentence> sentences)
@@ -100,6 +104,15 @@ public class Trainer implements IOUtil.Logger {
         }
     }
 
+
+    public void setL1(double l1) {
+        this.l1 = l1;
+    }
+
+    public void setL2(double l2) {
+        this.l2 = l2;
+    }
+
     private double getL2Norm(double [] weights)
     {
         double norm = 0;
@@ -112,12 +125,14 @@ public class Trainer implements IOUtil.Logger {
 
     /**
      * Read sentences from the given data set file.
+     * @param task Task for this annotated data set
      * @param file_name the data set file
      * @param tags when supplied filled with all the found tags
      * @return list of all sentences read, contains tag and value for each observation in a sentence
      * @throws IOException
      */
-    public  static ArrayList<Sentence> readAnnotatedSentences(String file_name, Tags tags) throws IOException
+    public  static ArrayList<Sentence> readAnnotatedSentences(Configuration.Task task,
+                                                              String file_name, Tags tags) throws IOException
     {
         IOUtil.DatasetReader reader = new IOUtil.DatasetReader(file_name) ;
         ArrayList<Sentence> sentences =new ArrayList<Sentence>();
@@ -139,7 +154,8 @@ public class Trainer implements IOUtil.Logger {
             if(word == null){
                 sentence_index++;
                 //create arraylist for the new sentence
-                words.add(sentence_index, new ArrayList<>());
+                words
+                        .add(sentence_index, new ArrayList<>());
                 tagSymbols.add(sentence_index, new ArrayList<>());
 
             }
@@ -163,7 +179,7 @@ public class Trainer implements IOUtil.Logger {
         for(int i = 0; i < words.size(); i++)
         {
             if(!words.get(i).isEmpty())
-                sentences.add(new Sentence(words.get(i), tagSymbols.get(i), tags));
+                sentences.add(new Sentence(task, words.get(i), tagSymbols.get(i), tags));
         }
 
         return sentences;
