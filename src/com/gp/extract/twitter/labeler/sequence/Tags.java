@@ -18,6 +18,7 @@ public class Tags implements IOUtil.Logger, IOUtil.Loadable{
     private boolean isInitialized = false;
     private static final String LOGGER_ID = Tags.class.getName();
     private String saveDirectory;
+    private int sizeReduction = 0;
 
 
     public Tags(String saveDirectory, String startTagSymbol, String endTagSymbol)
@@ -59,6 +60,7 @@ public class Tags implements IOUtil.Logger, IOUtil.Loadable{
             //add the start tag
             idToTag.add(index, startTagSymbol);
             symbolToTag.put(startTagSymbol, index++);
+            sizeReduction++;
         }
 
         //check if the end tag symbol exists in the tag set
@@ -67,6 +69,7 @@ public class Tags implements IOUtil.Logger, IOUtil.Loadable{
         if(endIndex != null)
         {
             endTagIndex = endIndex;
+            idToTag.add(index, endTagSymbol);
         }
         else
         {
@@ -74,6 +77,7 @@ public class Tags implements IOUtil.Logger, IOUtil.Loadable{
             //add the start tag
             idToTag.add(index, endTagSymbol);
             symbolToTag.put(endTagSymbol, index++);
+            sizeReduction++;
         }
 
 
@@ -116,7 +120,7 @@ public class Tags implements IOUtil.Logger, IOUtil.Loadable{
      */
     public int getSize()
     {
-        return idToTag.size()-1;
+        return idToTag.size()- sizeReduction;
     }
 
     public boolean isInitialized()

@@ -2,9 +2,9 @@ package com.gp.extract.twitter.pipeline.taggers;
 
 
 import com.gp.extract.twitter.Configuration;
-import com.gp.extract.twitter.labeler.models.SequenceModel;
 import com.gp.extract.twitter.labeler.Trainer;
 import com.gp.extract.twitter.labeler.features.FeatureExtractor;
+import com.gp.extract.twitter.labeler.models.SequenceModel;
 import com.gp.extract.twitter.labeler.sequence.Sentence;
 import com.gp.extract.twitter.labeler.sequence.Tags;
 import com.gp.extract.twitter.util.IOUtil;
@@ -131,7 +131,7 @@ public abstract class Tagger implements IOUtil.Logger{
      */
     public double test(String testing_file)
     {
-        if(model == null && getCrossValidationFolds() == 0)
+        if(model == null )
         {
             IOUtil.showError(this,"Can't find model to test.");
             return 0;
@@ -146,18 +146,10 @@ public abstract class Tagger implements IOUtil.Logger{
         }
         IOUtil.showInfo(this, "Completed reading testing data");
 
-        //do any preprocess like pre tagging
-        preprocess(testing_sentences);
-        double precision = 0;
-        if(getCrossValidationFolds() == 0) {
-            precision = testModel(testing_sentences);
-        }
-        else
-        {
-            precision = testModelWithCrossValidation(testing_sentences);
-        }
 
-        return precision;
+        preprocess(testing_sentences);
+
+        return testModel(testing_sentences);
     }
 
     public double test()
@@ -195,12 +187,6 @@ public abstract class Tagger implements IOUtil.Logger{
 
     }
 
-    private double testModelWithCrossValidation(ArrayList<Sentence> sentences) {
-        int folds = getCrossValidationFolds();
-
-
-        return 0;
-    }
 
     public void predict(Sentence sentence)
     {
@@ -213,7 +199,6 @@ public abstract class Tagger implements IOUtil.Logger{
     }
     protected abstract ArrayList<FeatureExtractor> setupFeatures() throws Exception;
 
-    protected abstract int getCrossValidationFolds();
     @Override
     public String getLogId() {
         return getLoggerId();

@@ -53,14 +53,8 @@ public abstract class FeatureExtractor implements IOUtil.Loadable{
                 //add the feature to the mapping
                 index = featureMapping.size();
                 //update the returned index
-                featureMapping.put(feature, index);
+                featureMapping.put(feature, index + featureIndexOffset);
             }
-        }
-        else
-        {
-            //in non training mode the offset should be used
-            if(!isTraining)
-                index += featureIndexOffset;
         }
         return index;
 

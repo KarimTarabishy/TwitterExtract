@@ -23,15 +23,13 @@ public class WordsFeatures {
 
             for(int position = 0; position< sentence.getSize();position++)
             {
-                FeatureArray array = new FeatureArray();
+                FeatureArray array = output.get(position);
                 String word = sentence.getWord(position);
                 String quotationFixed = WordsFeatures.fixQuotations(word);
                 array.add(getFeatureIndex("word|"+quotationFixed, isTraining));
                 array.add(getFeatureIndex("lower|"+WordsFeatures.lowerNormalizeString(quotationFixed), isTraining));
                 array.add(getFeatureIndex("xxdShape|" + Xxdshape(quotationFixed), isTraining), 0.5);
                 array.add(getFeatureIndex("charclass|" + charclassshape(word), isTraining), 0.5);
-
-                output.add(position, array);
             }
         }
 
@@ -67,7 +65,7 @@ public class WordsFeatures {
         public void extract(Sentence sentence, ArrayList<FeatureArray> output, boolean isTraining) {
             for(int position = 0; position< sentence.getSize();position++)
             {
-                FeatureArray array = new FeatureArray();
+                FeatureArray array = output.get(position);
                 String norm_word = lowerNormalizeString(WordsFeatures.fixQuotations(sentence.getWord(position)));
                 int word_length = norm_word.length();
                 for(int prefix_len = 1; prefix_len <= ngram; prefix_len++)
@@ -79,7 +77,6 @@ public class WordsFeatures {
                     }
                     else break;
                 }
-                output.add(position, array);
             }
         }
 
@@ -101,7 +98,7 @@ public class WordsFeatures {
         public void extract(Sentence sentence, ArrayList<FeatureArray> output, boolean isTraining) {
             for(int position = 0; position< sentence.getSize();position++)
             {
-                FeatureArray array = new FeatureArray();
+                FeatureArray array = output.get(position);
                 String norm_word = lowerNormalizeString(WordsFeatures.fixQuotations(sentence.getWord(position)));
                 int word_length = norm_word.length();
                 for(int prefix_len = 1; prefix_len <= ngram; prefix_len++)
@@ -114,7 +111,6 @@ public class WordsFeatures {
                     }
                     else break;
                 }
-                output.add(position, array);
             }
         }
 
@@ -135,17 +131,15 @@ public class WordsFeatures {
                 String nextWord = sentence.getWord(position+1);
                 String nextNormWord = lowerNormalizeString(nextWord);
                 String curNormWord = lowerNormalizeString(sentence.getWord(position));
-                FeatureArray array = new FeatureArray();
+                FeatureArray array = output.get(position);
                 array.add(getFeatureIndex("nextword|"+nextWord,isTraining), 0.5);
                 array.add(getFeatureIndex("nextword|"+nextNormWord,isTraining), 0.5);
                 array.add(getFeatureIndex("curnext|"+curNormWord+"|"+nextNormWord,isTraining));
-                output.add(position, array);
             }
-            FeatureArray array = new FeatureArray();
+            FeatureArray array = output.get(sentence.getSize()-1);
             array.add(getFeatureIndex("curnext|"+lowerNormalizeString(sentence.getWord(sentence.getSize()-1))
                     +"|<END>",isTraining));
             array.add(getFeatureIndex("nextword|<END>",isTraining));
-            output.add(array);
         }
 
         @Override
@@ -159,21 +153,19 @@ public class WordsFeatures {
 
         @Override
         public void extract(Sentence sentence, ArrayList<FeatureArray> output, boolean isTraining) {
-            FeatureArray array = new FeatureArray();
+            FeatureArray array = output.get(0);
             array.add(getFeatureIndex("prevCur|<START>|"+lowerNormalizeString(sentence.getWord(0))
                     ,isTraining));
             array.add(getFeatureIndex("prevword|<START>",isTraining));
-            output.add(0,array);
             for(int position = 1; position < sentence.getSize();position++)
             {
                 String prevWord = sentence.getWord(position-1);
                 String prevNormWord = lowerNormalizeString(prevWord);
                 String curNormWord = lowerNormalizeString(sentence.getWord(position));
-                array = new FeatureArray();
+                array = output.get(position);
                 array.add(getFeatureIndex("prevword|"+prevWord,isTraining));
                 array.add(getFeatureIndex("prevword|"+prevNormWord,isTraining));
                 array.add(getFeatureIndex("curnext|"+prevNormWord+"|"+curNormWord,isTraining));
-                output.add(position, array);
             }
 
         }
@@ -190,12 +182,6 @@ public class WordsFeatures {
 
         @Override
         public void extract(Sentence sentence, ArrayList<FeatureArray> output, boolean isTraining) {
-
-            //fill output
-            for(int i = 0; i < sentence.getSize(); i++)
-            {
-                output.add(new FeatureArray());
-            }
 
             for(int position = 0; position < Math.min(sentence.getSize(),4);position++)
             {
@@ -225,7 +211,7 @@ public class WordsFeatures {
 
             for(int position = 0; position < sentence.getSize();position++)
             {
-                FeatureArray array = new FeatureArray();
+                FeatureArray array = output.get(position);
                 String word = sentence.getWord(position);
 
                 if (hasDigit.matcher(word).find())
@@ -247,7 +233,6 @@ public class WordsFeatures {
                         array.add(getFeatureIndex("ortho|hyph|" + part,isTraining));
                     }
                 }
-                output.add(position, array);
             }
 
         }
@@ -268,13 +253,12 @@ public class WordsFeatures {
 
             for(int position = 0; position < sentence.getSize();position++)
             {
-                FeatureArray array = new FeatureArray();
+                FeatureArray array = output.get(position);
                 String word = sentence.getWord(position);
 
                 if (validURL.matcher(word).matches() || validEmail.matcher(word).matches()){
                     array.add(getFeatureIndex("URL|validURL" ,isTraining));
                 }
-                output.add(position, array);
             }
 
         }
@@ -292,11 +276,6 @@ public class WordsFeatures {
 
         @Override
         public void extract(Sentence sentence, ArrayList<FeatureArray> output, boolean isTraining) {
-            //fill output
-            for(int i = 0; i < sentence.getSize(); i++)
-            {
-                output.add(new FeatureArray());
-            }
 
             if (sentence.getSize()>1){
                 output.get(0).add(getFeatureIndex("prevnext|<START>|"+
@@ -324,13 +303,6 @@ public class WordsFeatures {
 
         @Override
         public void extract(Sentence sentence, ArrayList<FeatureArray> output, boolean isTraining) {
-            //fill output
-            for(int i = 0; i < sentence.getSize(); i++)
-            {
-                output.add(new FeatureArray());
-            }
-
-
             for (int position = 0; position < sentence.getSize()-1; position++) {
                 String word = sentence.getWord(position);
                 int numChar = 0;

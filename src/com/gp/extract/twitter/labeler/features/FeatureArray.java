@@ -78,7 +78,6 @@ public class FeatureArray implements Iterable<Feature>{
                 }
                 //we have a feature with none empty features
                 return true;
-
             }
 
             @Override

@@ -1,0 +1,2 @@
+Training: 11,370 tokens and 591 sentences
+Testing: 3,841 tokens and 197 sentences

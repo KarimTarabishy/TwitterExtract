@@ -20,6 +20,10 @@ public abstract class SequenceModel implements IOUtil.Logger, IOUtil.Loadable{
     private static final String FEATURES_DIR = "features/";
 
 
+    protected int transitionWeightsOffset, transitionWeightsColLength, observationalWeightsOffset,
+            observationalWeightsColLength;
+
+
     protected Tags tags;
     protected Configuration.Task task;
     protected Features features;
@@ -47,7 +51,32 @@ public abstract class SequenceModel implements IOUtil.Logger, IOUtil.Loadable{
         return task;
     }
     public abstract String getFeatureName(int index);
-    public abstract void setupWeights();
+    public void setupWeights() {
+
+        if(weights != null)
+        {
+            IOUtil.showError(this, "Weights are already setup.");
+            return;
+        }
+
+        //tags + tags*tags+1 + tags*obs_feat
+        //we have a weight for each tag excluding the start tag
+        int tags_size = tags.getSize();
+        //weight for each possible tag transition
+        int transitional_size = (tags.getSize()) * (tags.getSize()+1);
+        //weights for having the observation features with each tag excluding the start tag
+        int observational_size= features.getDimensions() * (tags.getSize());
+
+        weights = new double[tags_size + transitional_size+ observational_size];
+
+        //set offsets
+        transitionWeightsOffset = tags_size;
+        observationalWeightsOffset = tags_size + transitional_size;
+
+        //set row sizes
+        transitionWeightsColLength = (tags.getSize()+1);
+        observationalWeightsColLength = (tags.getSize());
+    }
 
     public double [] getWeights()
     {
@@ -107,13 +136,9 @@ public abstract class SequenceModel implements IOUtil.Logger, IOUtil.Loadable{
             throw e;
         }
         finally {
-            if(bufferedReader != null)
+            if (bufferedReader != null)
                 bufferedReader.close();
         }
-
-
-
-
         lock();
     }
 
@@ -150,5 +175,37 @@ public abstract class SequenceModel implements IOUtil.Logger, IOUtil.Loadable{
         }
 
 
+    }
+
+
+    protected int getTagWeightIndex(int tag_index)
+    {
+        return tag_index;
+    }
+    protected int getTransitionTagWeightIndex(int tag_current_index, int tag_previous_index)
+    {
+        return transitionWeightsOffset + ((tag_current_index*(transitionWeightsColLength))
+                + tag_previous_index);
+    }
+    protected int getObservationalTagWeightIndex(int tag_index, int feature_index)
+    {
+        return observationalWeightsOffset + ((feature_index*(observationalWeightsColLength))
+                + tag_index);
+    }
+
+    protected double getTagWeight(int tag_index)
+    {
+        return weights[getTagWeightIndex(tag_index)];
+    }
+
+
+    protected double getTransitionTagWeight(int tag_current_index, int tag_previous_index)
+    {
+        return weights[getTransitionTagWeightIndex(tag_current_index, tag_previous_index)];
+    }
+
+    protected double getObservationalTagWeight(int tag_index, int feature_index)
+    {
+        return weights[getObservationalTagWeightIndex(tag_index, feature_index)];
     }
 }

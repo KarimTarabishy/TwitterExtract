@@ -154,8 +154,7 @@ public class Trainer implements IOUtil.Logger {
             if(word == null){
                 sentence_index++;
                 //create arraylist for the new sentence
-                words
-                        .add(sentence_index, new ArrayList<>());
+                words.add(sentence_index, new ArrayList<>());
                 tagSymbols.add(sentence_index, new ArrayList<>());
 
             }

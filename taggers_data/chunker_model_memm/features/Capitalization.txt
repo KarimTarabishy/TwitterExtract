@@ -1,0 +1,12 @@
+61663
+initcap	61664
+pos-nocap	61665
+nocap	61666
+shortcap	61667
+mixcap	61670
+first-nocap	61663
+first-initcap	61669
+first-mixcap	61672
+first-shortcap	61673
+first-longcap	61671
+longcap	61668

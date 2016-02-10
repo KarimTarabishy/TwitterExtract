@@ -1,7 +1,6 @@
 package com.gp.extract.twitter.stream;
 
 
-import com.gp.extract.twitter.Main;
 import com.gp.extract.twitter.pipeline.Pipeline;
 import com.gp.extract.twitter.util.IOUtil;
 import twitter4j.*;

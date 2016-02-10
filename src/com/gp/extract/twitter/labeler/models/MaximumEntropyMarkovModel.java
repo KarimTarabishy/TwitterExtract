@@ -14,11 +14,6 @@ import java.util.ArrayList;
 
 public class MaximumEntropyMarkovModel extends SequenceModel implements IOUtil.Logger, IOUtil.Loadable{
 
-    private int transitionWeightsOffset, transitionWeightsColLength, observationalWeightsOffset,
-            observationalWeightsColLength;
-
-    private static final String LOGGER_ID = MaximumEntropyMarkovModel.class.getName();
-
 
     @Override
     public String getLoggerId() {
@@ -55,65 +50,6 @@ public class MaximumEntropyMarkovModel extends SequenceModel implements IOUtil.L
 
         return tags.getTagSymbolById(col) + " < " + features.getFeatureName(row);
 
-    }
-
-    @Override
-    public void setupWeights() {
-
-        if(weights != null)
-        {
-            IOUtil.showError(this, "Weights are already setup.");
-            return;
-        }
-
-        //tags + tags*tags+1 + tags*obs_feat
-        //we have a weight for each tag excluding the start tag
-        int tags_size = tags.getSize();
-        //weight for each possible tag transition
-        int transitional_size = (tags.getSize()) * (tags.getSize()+1);
-        //weights for having the observation features with each tag excluding the start tag
-        int observational_size= features.getDimensions() * (tags.getSize());
-
-        weights = new double[tags_size + transitional_size+ observational_size];
-
-        //set offsets
-        transitionWeightsOffset = tags_size;
-        observationalWeightsOffset = tags_size + transitional_size;
-
-        //set row sizes
-        transitionWeightsColLength = (tags.getSize()+1);
-        observationalWeightsColLength = (tags.getSize());
-    }
-
-    private int getTagWeightIndex(int tag_index)
-    {
-        return tag_index;
-    }
-    private int getTransitionTagWeightIndex(int tag_current_index, int tag_previous_index)
-    {
-        return transitionWeightsOffset + ((tag_current_index*(transitionWeightsColLength))
-                + tag_previous_index);
-    }
-    private int getObservationalTagWeightIndex(int tag_index, int feature_index)
-    {
-        return observationalWeightsOffset + ((feature_index*(observationalWeightsColLength))
-                + tag_index);
-    }
-
-    private double getTagWeight(int tag_index)
-    {
-        return weights[getTagWeightIndex(tag_index)];
-    }
-
-
-    private double getTransitionTagWeight(int tag_current_index, int tag_previous_index)
-    {
-        return weights[getTransitionTagWeightIndex(tag_current_index, tag_previous_index)];
-    }
-
-    private double getObservationalTagWeight(int tag_index, int feature_index)
-    {
-        return weights[getObservationalTagWeightIndex(tag_index, feature_index)];
     }
 
     private double[] calculateAllTagScores(int position, Sentence sentence)

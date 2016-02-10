@@ -22,36 +22,34 @@ public class WordClusters  extends FeatureExtractor{
 
     public WordClusters() throws IOException {
 
-        BufferedReader bufferedReader = null;
-        try
+        if(wordToPath == null)
         {
-            bufferedReader= new BufferedReader(IOUtil.getUTF8FileReader(DATA_FILE, false));
-            String line = "";
-            wordToPath = new HashMap<String,String>();
-            while((line = bufferedReader.readLine()) != null){
-                String[] data = line.split("\\t");
-                wordToPath.put(data[1], data[0]);
+            BufferedReader bufferedReader = null;
+            try
+            {
+                bufferedReader= new BufferedReader(IOUtil.getUTF8FileReader(DATA_FILE, false));
+                String line = "";
+                wordToPath = new HashMap<String,String>();
+                while((line = bufferedReader.readLine()) != null){
+                    String[] data = line.split("\\t");
+                    wordToPath.put(data[1], data[0]);
+                }
+            }
+            catch (IOException e)
+            {
+                throw e;
+            }
+            finally {
+                if(bufferedReader != null)
+                    bufferedReader.close();
             }
         }
-        catch (IOException e)
-        {
-            throw e;
-        }
-        finally {
-            if(bufferedReader != null)
-                bufferedReader.close();
-        }
+
 
     }
 
     @Override
     public void extract(Sentence sentence, ArrayList<FeatureArray> output, boolean isTraining) {
-        //fill output
-        for(int i = 0; i < sentence.getSize(); i++)
-        {
-            output.add(new FeatureArray());
-        }
-
         //start extraction
         for(int position = 0; position< sentence.getSize();position++)
         {

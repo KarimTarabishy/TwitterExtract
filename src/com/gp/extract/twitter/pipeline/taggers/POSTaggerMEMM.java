@@ -2,11 +2,11 @@ package com.gp.extract.twitter.pipeline.taggers;
 
 
 import com.gp.extract.twitter.Configuration;
-import com.gp.extract.twitter.labeler.models.MaximumEntropyMarkovModel;
-import com.gp.extract.twitter.labeler.models.SequenceModel;
 import com.gp.extract.twitter.labeler.features.FeatureExtractor;
 import com.gp.extract.twitter.labeler.features.WordClusters;
 import com.gp.extract.twitter.labeler.features.WordsFeatures;
+import com.gp.extract.twitter.labeler.models.MaximumEntropyMarkovModel;
+import com.gp.extract.twitter.labeler.models.SequenceModel;
 import com.gp.extract.twitter.labeler.sequence.Tags;
 
 import java.io.IOException;
@@ -62,9 +62,6 @@ public class POSTaggerMEMM extends Tagger{
         return extractors;
     }
 
-    @Override
-    protected int getCrossValidationFolds() {
-        return 0;
-    }
+
 
 }

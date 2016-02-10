@@ -1,14 +1,14 @@
 134272
-pos-mixcap	12
-shortcap	2
-initcap	3
-mixcap	8
-first-nocap	7
-first-shortcap	0
-nocap	1
-pos-nocap	10
-pos-initcap	11
-first-initcap	6
-first-mixcap	9
-first-longcap	5
-longcap	4
+pos-mixcap	134284
+shortcap	134274
+initcap	134275
+mixcap	134280
+first-nocap	134279
+first-shortcap	134272
+nocap	134273
+pos-nocap	134282
+pos-initcap	134283
+first-initcap	134278
+first-mixcap	134281
+first-longcap	134277
+longcap	134276

@@ -35,32 +35,24 @@ public class Features implements IOUtil.Logger, IOUtil.Loadable{
 
     public void extractFeatures(Sentence sentence)
     {
-        ArrayList<ArrayList<FeatureArray>> sentencePositionalFeatures = new ArrayList<>(extractors.size());
-        //initialize the extractorFeatures
-        for(int extractor_index = 0; extractor_index < extractors.size(); extractor_index++)
+        ArrayList<FeatureArray> positionalFeatures = new ArrayList<>(sentence.getSize());
+        //initialize the feature array
+        for(int position = 0; position < sentence.getSize(); position++)
         {
-            sentencePositionalFeatures.add(extractor_index, new ArrayList<>(sentence.getSize()));
+            positionalFeatures.add(position, new FeatureArray());
         }
 
-        //This part is specifically made like that to be easy to parallelize later
         //loop over each extractor
         for(int extractor_index = 0; extractor_index < extractors.size(); extractor_index++)
         {
             //get the current extractor
             FeatureExtractor extractor = extractors.get(extractor_index);
-            //list which contain positional features of the sentence
-            ArrayList<FeatureArray> positionalFeatures = sentencePositionalFeatures.get(extractor_index);
             //extract the features
             extractor.extract(sentence, positionalFeatures, false);
         }
 
         //attach to sentence
-        for(int extractor_index = 0; extractor_index < extractors.size(); extractor_index++)
-        {
-            sentence.concatFeatures(sentencePositionalFeatures.get(extractor_index),
-                        extractor_index==0);
-        }
-
+        sentence.setFeatures(positionalFeatures);
     }
 
 
@@ -85,43 +77,34 @@ public class Features implements IOUtil.Logger, IOUtil.Loadable{
         }
 
 
-        ArrayList<ArrayList<ArrayList<FeatureArray>>> extractorFeatures = new ArrayList<>(extractors.size());
+        ArrayList<ArrayList<FeatureArray>> sentencesPositionalFeatures = new ArrayList<>(sentences.size());
         //initialize the extractorFeatures
-        for(int extractor_index = 0; extractor_index < extractors.size(); extractor_index++)
-        {
-            extractorFeatures.add(extractor_index, new ArrayList<>(sentences.size()));
+        for(int sentence_index = 0; sentence_index < sentences.size(); sentence_index++) {
+            Sentence sentence = sentences.get(sentence_index);
+            ArrayList<FeatureArray> featuresArray = new ArrayList<>(sentence.getSize());
+            for(int position = 0; position < sentence.getSize(); position++)
+            {
+                featuresArray.add(new FeatureArray());
+            }
+            sentencesPositionalFeatures.add(sentence_index, featuresArray);
         }
 
 
-        //This part is specifically made like that to be easy to parallelize later
         //loop over each extractor
         for(int extractor_index = 0; extractor_index < extractors.size(); extractor_index++)
         {
             //get the current extractor
             FeatureExtractor extractor = extractors.get(extractor_index);
-            //get the list whose elements contain the positional features of each sentence for the current extractor
-            ArrayList<ArrayList<FeatureArray>> sentencesPositionalFeatures = extractorFeatures.get(extractor_index);
+            extractor.setFeatureIndexOffset(nextOffset);
             //loop over each sentence to extract features
             for(int sentence_index = 0; sentence_index < sentences.size(); sentence_index++) {
                 //get the current sentence
                 Sentence sentence = sentences.get(sentence_index);
-                //list which contain positional features of the sentence
-                ArrayList<FeatureArray> positionalFeatures = new ArrayList<>(sentence.getSize());
                 //extract the features in training mode
-                extractor.extract(sentence, positionalFeatures, true);
-                //add the positional feature of this sentence
-                sentencesPositionalFeatures.add(sentence_index, positionalFeatures);
-
+                extractor.extract(sentence, sentencesPositionalFeatures.get(sentence_index), true);
             }
-        }
 
-        //now its time to sequentially update the offset of each feature extractor
-        for(int extractor_index = 0; extractor_index < extractors.size(); extractor_index++)
-        {
-            FeatureExtractor extractor = extractors.get(extractor_index);
-            extractor.setFeatureIndexOffset(nextOffset);
             nextOffset += extractor.getFeaturesSize();
-
         }
 
         //make a reverse mapping
@@ -130,47 +113,18 @@ public class Features implements IOUtil.Logger, IOUtil.Loadable{
         for(int extractor_index = 0; extractor_index < extractors.size(); extractor_index++)
         {
             FeatureExtractor extractor = extractors.get(extractor_index);
-            int offset = extractor.getFeatureIndexOffset();
             Map<String, Integer> mapping = extractor.getFeatureMapping();
             for(Map.Entry<String, Integer> entry : mapping.entrySet())
             {
-                featureIndexToSymbol.set(entry.getValue()+offset,entry.getKey());
-            }
-        }
-
-
-        //start fixing the ids produced before offset was set
-        for(int extractor_index = 0; extractor_index < extractors.size(); extractor_index++)
-        {
-            FeatureExtractor extractor = extractors.get(extractor_index);
-            if(extractor.getFeatureIndexOffset() == 0)
-                continue;
-
-            //get the list whose elements contain the positional features of each sentence for the current extractor
-            ArrayList<ArrayList<FeatureArray>> sentencesPositionalFeatures = extractorFeatures.get(extractor_index);
-            //loop over each sentence
-            for(int sentence_index = 0; sentence_index < sentences.size(); sentence_index++) {
-                ArrayList<FeatureArray> features = sentencesPositionalFeatures.get(sentence_index);
-                for (FeatureArray array : features)
-                {
-                    array.addOffset(extractor.getFeatureIndexOffset());
-                }
+                featureIndexToSymbol.set(entry.getValue(),entry.getKey());
             }
         }
 
         //attach to sentence
-        for(int extractor_index = 0; extractor_index < extractors.size(); extractor_index++)
-        {
-            //get the list whose elements contain the positional features of each sentence for the current extractor
-            ArrayList<ArrayList<FeatureArray>> sentencesPositionalFeatures = extractorFeatures.get(extractor_index);
-            //loop over each sentence
-            for(int sentence_index = 0; sentence_index < sentences.size(); sentence_index++) {
-                //list which contain positional features of the sentence
-                sentences.get(sentence_index).concatFeatures(sentencesPositionalFeatures.get(sentence_index),
-                        extractor_index==0);
-            }
+        for(int sentence_index = 0; sentence_index < sentences.size(); sentence_index++) {
+            //list which contain positional features of the sentence
+            sentences.get(sentence_index).setFeatures(sentencesPositionalFeatures.get(sentence_index));
         }
-
 
         return true;
     }

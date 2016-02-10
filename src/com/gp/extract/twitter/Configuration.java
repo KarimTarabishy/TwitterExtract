@@ -21,18 +21,23 @@ public class Configuration {
     static{
         /*********  Training files  *********/
         TRAIN_FILES.put(Task.POS, "data/oct27.conll");
+        TRAIN_FILES.put(Task.CHUNKER, "data/chunk_train.txt");
 
         /*********  Testing files  *********/
         TEST_FILES.put(Task.POS, "data/daily547.conll");
+        TEST_FILES.put(Task.CHUNKER, "data/chunk_test.txt");
 
         /*********  Tagger Folder  *********/
         TAGGER_FOLDER.put(Task.POS, "pos_model_memm/");
+        TAGGER_FOLDER.put(Task.CHUNKER, "chunker_model_memm/");
 
         /*********  L1 Regularization  *********/
         L1_REGULARIZATION.put(Task.POS, 0.25);
+        L1_REGULARIZATION.put(Task.CHUNKER, 0.25);
 
         /*********  L2 Regularization  *********/
         L2_REGULARIZATION.put(Task.POS, 2.0);
+        L2_REGULARIZATION.put(Task.CHUNKER, 2.0);
     }
     private Configuration(){
 

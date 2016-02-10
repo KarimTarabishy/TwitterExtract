@@ -18,24 +18,23 @@ public class Sentence {
 
         for(Configuration.Task t : Configuration.Task.values())
         {
-            tags.put(t,new ArrayList<>(words.size()));
+            ArrayList<Integer> tt = new ArrayList<>(words.size());
+            for(int i = 0; i < words.size(); i++)
+            {
+                tt.add(null);
+            }
+            tags.put(t,tt);
         }
 
         ArrayList<Integer> _tags = tags.get(task);
         if(tagSymbols!= null)
         {
-            for(String tagSymbol : tagSymbols)
-            {
-               _tags.add(tagsSet.getTagIDBySymbol(tagSymbol));
-            }
-        }
-        else
-        {
             for(int i = 0; i < words.size(); i++)
             {
-                _tags.add(i, -1);
+               _tags.set(i,tagsSet.getTagIDBySymbol(tagSymbols.get(i)));
             }
         }
+
 
 
     }
@@ -62,9 +61,13 @@ public class Sentence {
         }
     }
 
+    public void setFeatures(ArrayList<FeatureArray> features)
+    {
+        concatFeatures(features, true);
+    }
     public int getTag(Configuration.Task task, int position, Tags tagSet)
     {
-        if(position == -1)
+        if(position < 0)
         {
             return tagSet.getStartTagId();
         }
