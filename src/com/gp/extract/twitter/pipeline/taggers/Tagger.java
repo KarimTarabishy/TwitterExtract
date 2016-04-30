@@ -68,7 +68,7 @@ public abstract class Tagger implements IOUtil.Logger{
 
 
     /**
-     * Trainer memm on pos and report accuracy on test data.
+     * Trainer model and report accuracy on test data.
      * @param training_file file containing training data, format "word \t tag",
      *                      and tweets are separated by an empty line
      */
