@@ -66,8 +66,12 @@ public class Pipeline implements IOUtil.Logger{
     {
         ArrayList<String> words = (ArrayList<String>) Twokenize.tokenizeRawTweetText(text);
         Sentence sentence = new Sentence(getPOSTagger().getTask(), words, null, null);
+
+        //POS
         getPOSTagger().predict(sentence);
+        //CHUNK
         getChunker().predict(sentence);
+        //CAP
 
         for(int position = 0; position < sentence.getSize(); position++)
         {

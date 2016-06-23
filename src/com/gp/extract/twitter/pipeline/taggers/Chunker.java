@@ -16,6 +16,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 public class Chunker extends Tagger {
+
     public Chunker(String saveDirectory) {
         super(saveDirectory);
     }

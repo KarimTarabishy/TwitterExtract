@@ -10,6 +10,7 @@ public class Sentence {
     private ArrayList<String> words;
     private EnumMap<Configuration.Task, ArrayList<Integer>> tags;
     private ArrayList<FeatureArray> observationalFeatures;
+    private double capitalizeFeature = 0;
 
     public Sentence(Configuration.Task task, ArrayList<String> words, ArrayList<String> tagSymbols, Tags tagsSet)
     {
@@ -45,6 +46,14 @@ public class Sentence {
         return words.size();
     }
 
+    public void setCapitalizeFeature(double value)
+    {
+        capitalizeFeature = value;
+    }
+    public double getCapitalizeFeature()
+    {
+        return capitalizeFeature;
+    }
 
     public void concatFeatures(ArrayList<FeatureArray> features, boolean starting)
     {

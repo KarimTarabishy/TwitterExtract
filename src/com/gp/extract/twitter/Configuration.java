@@ -15,17 +15,20 @@ public class Configuration {
 
     public static enum Task {
         POS,
-        CHUNKER
+        CHUNKER,
+        CAP
     }
 
     static{
         /*********  Training files  *********/
         TRAIN_FILES.put(Task.POS, "data/oct27.conll");
         TRAIN_FILES.put(Task.CHUNKER, "data/chunk_train.txt");
+        TRAIN_FILES.put(Task.CAP, "data/cap_train.txt");
 
         /*********  Testing files  *********/
         TEST_FILES.put(Task.POS, "data/daily547.conll");
         TEST_FILES.put(Task.CHUNKER, "data/chunk_test.txt");
+        TEST_FILES.put(Task.CAP, "data/cap_test.txt");
 
         /*********  Tagger Folder  *********/
         TAGGER_FOLDER.put(Task.POS, "pos_model_memm/");
